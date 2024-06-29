@@ -1,0 +1,4 @@
+run 'nano index.js'
+add 'console.log("Hello World")'
+run ^X to exit
+
