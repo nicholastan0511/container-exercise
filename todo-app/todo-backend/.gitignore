@@ -61,4 +61,4 @@ typings/
 .next
 
 mongo_data
-redis_daata
+redis_data
