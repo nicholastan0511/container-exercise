@@ -35,12 +35,34 @@ singleRouter.delete('/', async (req, res) => {
 
 /* GET todo. */
 singleRouter.get('/', async (req, res) => {
-  res.sendStatus(405); // Implement this
+  const todo = req.todo
+
+  if (!todo) return res.sendStatus(404)
+
+  res.send(todo)
 });
 
 /* PUT todo. */
 singleRouter.put('/', async (req, res) => {
-  res.sendStatus(405); // Implement this
+  const todo = req.todo;
+  const { text, done } = req.body
+
+  console.log(done)
+
+  if (!todo) return res.sendStatus(404)
+  
+  if (!text || done === undefined) {
+    return res.status(400).json({ error: 'Must provide fields to update' });
+  }
+
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(todo.id, { text, done }, { new: true });
+    res.json(updatedTodo); 
+  } catch (err) {
+    console.error('Error updating todo: ', err)
+    res.status(500)
+  }
+
 });
 
 router.use('/:id', findByIdMiddleware, singleRouter)
