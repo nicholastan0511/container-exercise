@@ -1,0 +1,9 @@
+In todo-backend directory where docker-compose.dev.yml file is at, run 'docker compose -f ./docker-compose.dev.yml up'
+On another terminal, run 'docker exec `container name of the mongo image` bash'
+
+Within the bash terminal of the container, run 'mongosh -u root -p example'
+Within the mongodb shell, run
+'show dbs'
+'use the_database' to navigate to the correct the_database
+'show collections'
+'db.todos.insertOne({ text: 'Increase the number of tools in my tool belt', done: false })'
