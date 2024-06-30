@@ -1,0 +1,5 @@
+Create a middleware that increment the number of the added_todos value for the post /todos endpoint.
+    - Run setAsync and default the amount to 1 for initialization if there is no 'added_todos' key within the redis database yet;
+    - Run setAsync and increment the value of the current amount if getAsync returns a value
+
+Implement the /statistics endpoint to show statistics of the 'added_todos'
