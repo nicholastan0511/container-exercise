@@ -1,0 +1,55 @@
+services:
+# Backend services
+  mongo:
+    image: mongo
+    ports:
+      - 3456:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: the_database
+    volumes:
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./todo-backend/mongo_data:/data/db
+  redis:
+    image: redis
+    ports:
+      - 6378:6379
+    command: ['redis-server', '--appendonly', 'yes']  # Overwrite the CMD
+    volumes: # Declare the volumes-server', '--appendonly', '
+      - ./todo-backend/redis_data:/data
+
+  backend-prod:
+    image: todo-backend
+    build:  
+      context: ./todo-backend/.
+      dockerfile: ./todo-backend/Dockerfile
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
+    container_name: backend-prod
+    depends_on:
+      - redis
+      - mongo
+
+# Frontend service
+  frontend-prod:
+    image: todo-frontend
+    build:
+      context: ./todo-frontend/.
+      dockerfile: ./todo-frontend/Dockerfile 
+    container_name: frontend-prod
+    depends_on:
+      - backend-prod
+    
+  todo-reverse-proxy:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: todo-reverse-proxy-prod
+    ports:
+      - 8080:80
+    depends_on:
+      - frontend-prod
+      - backend-prod
+  
