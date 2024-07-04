@@ -2,9 +2,13 @@ FROM node:20
 
 WORKDIR /usr/src/app
 
-COPY --chown=node:node . .
+# Copy package.json and package-lock.json files.
+COPY package*.json ./
 
-RUN npm ci --omit=dev
+# Install dependencies.
+RUN npm install
+
+COPY --chown=node:node . .
 
 USER node
 
